@@ -8,6 +8,7 @@ object KPIs extends App {
   /**
    * This creates a SparkSession, which will be used to operate on the DataFrames that we create.
    */
+  val one: Int = 1
   val spark = SparkSession.builder()
     .appName("Spark Essentials Playground App")
     .config("spark.master", "local")
