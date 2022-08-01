@@ -26,5 +26,6 @@ libraryDependencies ++= Seq(
   "org.apache.logging.log4j" % "log4j-api" % "2.4.1",
   "org.apache.logging.log4j" % "log4j-core" % "2.4.1",
   // postgres for DB connectivity
-  "org.postgresql" % "postgresql" % postgresVersion
+  "org.postgresql" % "postgresql" % postgresVersion,
+  "org.jsoup" % "jsoup" % "1.13.1"
 )

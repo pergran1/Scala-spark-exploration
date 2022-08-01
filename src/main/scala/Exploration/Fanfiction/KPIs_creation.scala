@@ -18,10 +18,14 @@ object KPIs_creation extends App{
     .option("delimiter", ",")
     .option("multiline", "true")
     .option("escape", """"""") // in pyspark it was: escape = '"' which was much cleaner
-    .load("src/main/scala/Exploration/Fanfiction/data/fanfiction_data_2022-06-05.csv")
+    .load("src/main/data/fanfiction_data_2022-06-05.csv")
 
   val sc = spark.sparkContext
   sc.setLogLevel("ERROR") //less error text so easier to see
 
   df.show()
+
+
+
+  // create a function that saves dataframe in a good format, example txt to showcase the dataframe
 }

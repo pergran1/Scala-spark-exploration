@@ -1,5 +1,8 @@
 package Exploration.MarioMaker
 
-object MarioMakerExploration {
+
+
+object MarioMakerExploration  extends App{
+
 
 }
