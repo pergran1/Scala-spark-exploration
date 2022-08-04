@@ -68,6 +68,8 @@ object WebScrape extends App{
   var testar = read_fanfic(all_ids(15))
   val fanfic_text = testar.select("div.userstuff").text().substring(13)
   val rating = testar.select("dd.rating").text() // ok
+
+
   println("category")
   println(testar.select("dd.category").text()) // remove the first part
   println("fandom")
@@ -93,11 +95,12 @@ object WebScrape extends App{
   println("hits")
   println(testar.select("dd.hits").text()) // remove the first part
   println("title heading")
-  println(testar.select("h2.title")) // remove the first part
+  println(testar.select("h2.title").text()) // remove the first part
   println("author")
   println(testar.select("h3.byline").text()) // remove the first part
   println("NÄSTA \n")
-  println(testar)
+
+
 
 
 
