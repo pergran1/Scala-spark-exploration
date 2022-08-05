@@ -6,6 +6,7 @@ package Exploration.Fanfiction
 import org.jsoup.Jsoup
 
 import scala.collection.convert.ImplicitConversions.`collection AsScalaIterable`
+import scala.collection.mutable
 import scala.xml.Document
 
 
@@ -52,55 +53,78 @@ object WebScrape extends App{
       return list
   }
 
+  // Here is the list that contains all the fanfic ids
   val all_ids = get_fanfiction_ids(15,2)
 
 
 
-  // create a function that takes the list of ids and webscrape
-  def read_fanfic(fanfic_id: String): org.jsoup.nodes.Document = {
-    s"https://archiveofourown.org/works/$fanfic_id?view_adult=true"
-    val doc = Jsoup.connect(s"https://archiveofourown.org/works/$fanfic_id?view_adult=true").get() // try to see if it works
-    return doc
+
+  def get_fanfic(fanfic_link: String): org.jsoup.nodes.Document = {
+    /*
+    Input: One fanfic id
+    Output the webscraped html for the corresponding id
+     */
+    Jsoup.connect(fanfic_link).get()
+  }
+
+  def insert_metric_values(fanfic_id: String, link: String, fanfic_text: String, html_soup: org.jsoup.nodes.Document,
+                           fanfic_map: mutable.Map[String, List[String]]): Unit = {
+
+    // Map for Fanfiction, the keys are the heading and the values are the class when webscraping
+    val metric_map = scala.collection.mutable.Map(
+      "dd" -> List("rating", "category", "fandom", "relationship",
+        "character", "language", "published", "words",
+        "chapters", "comments", "kudos", "bookmarks",
+        "hits"),
+      "h2" -> List("title"),
+      "h3" -> List("byline")
+    )
+
+    fanfic_map.updateWith("id")({ case Some(list) => Some(fanfic_id :: list) })
+    fanfic_map.updateWith("link")({ case Some(list) => Some(link :: list) })
+
+    metric_map.keys.foreach( key => metric_map(key).
+      foreach(list_value => if (fanfic_map.exists(_._1 == list_value)) {
+        val fanfic_value = html_soup.select(s"$key.$list_value").text()
+        fanfic_map.updateWith(list_value)({ case Some(list) => Some(fanfic_value :: list) })
+      } else {
+        println(s"$list_value did not exist ")
+      }) )
   }
 
 
-  println(all_ids(15))
-  var testar = read_fanfic(all_ids(15))
-  val fanfic_text = testar.select("div.userstuff").text().substring(13)
-  val rating = testar.select("dd.rating").text() // ok
+  // Example of the structure to scrape category: html_soup.select("dd.category").text()
+
+  def read_fanfic(fanfic_id_list: List[String]): mutable.Map[String, List[String]] = {
+    // Create map that will contain all the data when webscraping a fanfic
+    // byline is for author
+    val fanfic_map: mutable.Map[String, List[String]]  = mutable.Map("id" -> List(), "link"-> List(), "text"-> List(),
+      "link"-> List(), "rating"-> List(), "category"-> List(), "fandom"-> List(), "relationship"-> List(),
+      "character"-> List(), "language" ->List(), "published"-> List(), "words"-> List(), "chapters"-> List(),
+      "comments"-> List(), "kudos"-> List(), "bookmarks"-> List(), "hits"-> List(), "title"-> List(),
+      "byline"-> List()
+    )
+    // This is a for loop
+    for (id <- fanfic_id_list) {
+      Thread.sleep(6000)  // let it sleep a little
+      val fanfic_link = f"https://archiveofourown.org/works/$id?view_adult=true"
+      println(fanfic_link)
+      val id_doc: org.jsoup.nodes.Document = get_fanfic(fanfic_link) // get the html do
+      val fanfic_text = id_doc.select("div.userstuff").text()// get the fanfic text
 
 
-  println("category")
-  println(testar.select("dd.category").text()) // remove the first part
-  println("fandom")
-  println(testar.select("dd.fandom").text()) // remove the first part
-  println("relationship")
-  println(testar.select("dd.relationship").text()) // remove the first part
-  println("character")
-  println(testar.select("dd.character").text()) // remove the first part
-  println("language")
-  println(testar.select("dd.language").text()) // remove the first part
-  println("published")
-  println(testar.select("dd.published").text()) // remove the first part
-  println("words")
-  println(testar.select("dd.words").text()) // remove the first part
-  println("chapters")
-  println(testar.select("dd.chapters").text()) // remove the first part
-  println("comments")
-  println(testar.select("dd.comments").text()) // remove the first part
-  println("kudos")
-  println(testar.select("dd.kudos").text()) // remove the first part
-  println("bookmarks")
-  println(testar.select("dd.bookmarks").text()) // remove the first part
-  println("hits")
-  println(testar.select("dd.hits").text()) // remove the first part
-  println("title heading")
-  println(testar.select("h2.title").text()) // remove the first part
-  println("author")
-  println(testar.select("h3.byline").text()) // remove the first part
-  println("NÄSTA \n")
+      // use the function to insert values intp metric map
+      insert_metric_values(id, fanfic_link, fanfic_text, id_doc, fanfic_map)
+
+    }
+
+    return fanfic_map
+  }
 
 
+ val testar: mutable.Map[String, List[String]] = read_fanfic(all_ids)
+
+ println(testar)
 
 
 
