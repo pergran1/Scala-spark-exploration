@@ -1,4 +1,4 @@
-package Exploration.Pyspark
+package Exploration.Pyspark_training
 
 import org.apache.spark.sql.SparkSession
 import org.apache.spark.sql.{Row, SparkSession}
