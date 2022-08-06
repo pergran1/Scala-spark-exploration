@@ -122,7 +122,7 @@ object WebScrape extends App{
   }
 
 
- val testar: mutable.Map[String, List[String]] = read_fanfic(all_ids)
+ val testar = read_fanfic(all_ids)
 
  println(testar)
 
