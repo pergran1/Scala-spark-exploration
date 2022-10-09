@@ -11,7 +11,7 @@ import scala.xml.Document
 
 
 
-object WebScrape extends App{
+object Web_scrape_fanfictions extends App{
 
     def get_raw_data_ids(nbr: Int): List[String] ={
         /*

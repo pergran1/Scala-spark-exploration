@@ -1,5 +1,5 @@
 package Exploration.Fanfiction
-import Exploration.Fanfiction.KPIs.spark
+import Exploration.RockTheJVMSparkCourse.SparkIntro.spark
 import org.apache.spark.sql.SparkSession
 
 object KPIs_creation extends App{

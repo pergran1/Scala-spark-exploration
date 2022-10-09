@@ -1,9 +1,9 @@
-package Exploration.Fanfiction
+package Exploration.RockTheJVMSparkCourse
 
 import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SparkSession}
 
-object KPIs extends App {
+object SparkIntro extends App {
 
   /**
    * This creates a SparkSession, which will be used to operate on the DataFrames that we create.
